@@ -1,0 +1,91 @@
+# ------------------------------------------------------------------------------
+# Node modules
+# ------------------------------------------------------------------------------
+node_modules/
+.pnp/
+.pnp.js
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build output
+dist/
+build/
+.next/
+.cache/
+out/
+temp/
+tmp/
+.bazel/
+.vscode/
+*.tsbuildinfo
+
+# ------------------------------------------------------------------------------
+# .NET
+# ------------------------------------------------------------------------------
+# Build
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Packages
+*.nupkg
+project.lock.json
+
+# Publish output
+publish/
+Release/
+Debug/
+Backup/
+Packages/
+*.Publishxml
+
+# User-specific files
+*.sln.ide/
+*.sln.GP/
+*.vs/
+*.vscode/
+*.user/
+*.DS_Store
+
+# ------------------------------------------------------------------------------
+# Security / secrets
+# ------------------------------------------------------------------------------
+# Database files
+*.mdf
+*.ldf
+
+# Connection strings
+appsettings.Local.json
+
+# ------------------------------------------------------------------------------
+# OS files
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------------------------------------------------------------
+# IDE files
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/
+*.suo
+*.user
+*.userprefs
+*.sln.dotnettools.config
+
+# ------------------------------------------------------------------------------
+# Comments
+# ------------------------------------------------------------------------------
+# This .gitignore covers both Node.js and .NET standard files.
+# Adjust and customize for your own project structure.
