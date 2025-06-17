@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Sparkles, Keyboard } from 'lucide-react';
+import { Search, Keyboard } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading = false }) =>
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#f8f9f9] px-4 py-8">
+    <div className="flex justify-center w-full items-center min-h-screen bg-[#f8f9f9] px-4 py-8">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
@@ -48,7 +48,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading = false }) =>
             Find Your Answer
           </h1>
           <p className="text-[#6a737c] text-base">
-            Search through millions of programming questions and answers
+            Search through questions on stack overflow
           </p>
         </div>
 
@@ -110,13 +110,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading = false }) =>
                 {tag}
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="text-center mt-6">
-          <div className="flex items-center justify-center space-x-2 text-xs text-[#6a737c]">
-            <Sparkles className="w-4 h-4" />
-            <span>Powered by advanced search algorithms</span>
           </div>
         </div>
       </div>

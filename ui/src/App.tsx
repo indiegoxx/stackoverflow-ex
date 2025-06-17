@@ -31,7 +31,7 @@ const App: React.FC = () => {
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Search Error</h2>
             <p className="text-gray-600 mb-4">{error}</p>
-            <button 
+            <button
               onClick={clearResults}
               className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
@@ -48,8 +48,8 @@ const App: React.FC = () => {
 
     if (searchResults) {
       return (
-        <SearchResults 
-          results={searchResults} 
+        <SearchResults
+          results={searchResults}
           query={currentQuery}
           isLoading={isLoading}
         />
@@ -76,6 +76,7 @@ const App: React.FC = () => {
     <div className="flex h-screen">
       <SideNav activeItem={activeNavItem} onItemClick={handleNavItemClick} />
       {renderContent()}
+
     </div>
   );
 };

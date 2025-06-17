@@ -4,7 +4,7 @@ services:
   ui:
     build: ui
     ports:
-      - "3000:3000"
+      - "80:80"
     environment:
       - API_URL=http://api:8000
     depends_on:
