@@ -27,3 +27,9 @@
         public int quota_remaining { get; set; }
     }
 
+    public class RecentQuestion
+    {
+        public string Title { get; set; }
+        public DateTime Timestamp { get; set; }
+    }
+

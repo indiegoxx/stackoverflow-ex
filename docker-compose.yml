@@ -1,6 +1,30 @@
 version: '3.8'
 
 services:
+  ui:
+    build: ui
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    networks:
+      - app-network
+  api:
+    build: api
+    ports:
+      - "8000:8000"
+    environment:
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+      - Redis__ConnectionString=redis:6379
+      - Ollama__BaseAddress=http://ollama:11434/
+    depends_on:
+      - redis
+      - ollama
+    networks:
+      - app-network
   redis:
     image: redis:alpine
     ports:

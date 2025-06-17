@@ -7,7 +7,8 @@ public interface ICache
     Task<string?> GetStringAsync(string key);
     Task<bool> RemoveAsync(string key);
     Task SetObjectAsync<T>(string key, T value, TimeSpan? expiration = null);
-    Task<T?> GetObjectAsync<T>(string key);
+    Task PushToListAsync<T>(string key, T item);
+    Task<List<T>> GetListAsync<T>(string key);
 }
 
 
@@ -22,9 +23,7 @@ public class RedisCacheService : ICache
     {
         _logger = logger;
 
-        // Get the Redis connection string from configuration
-        // This will pick up "Redis__ConnectionString" from environment variables in Docker Compose
-        // Or "Redis:ConnectionString" from appsettings.json
+
         string? redisConnectionString = configuration["Redis:ConnectionString"];
 
         if (string.IsNullOrEmpty(redisConnectionString))
@@ -35,28 +34,22 @@ public class RedisCacheService : ICache
 
         try
         {
-            // Create a single ConnectionMultiplexer instance and reuse it.
-            // AbortOnConnectFail = false is often recommended in production to allow background reconnection attempts.
             var options = ConfigurationOptions.Parse(redisConnectionString);
             options.AbortOnConnectFail = false;
-
             _redisConnection = ConnectionMultiplexer.Connect(options);
-
-            // Subscribe to connection events for better diagnostics
             _redisConnection.ConnectionFailed += (sender, e) =>
                 _logger.LogError(e.Exception, "Redis connection failed: {FailureType}", e.FailureType);
             _redisConnection.ConnectionRestored += (sender, e) =>
                 _logger.LogInformation("Redis connection restored.");
             _redisConnection.ConfigurationChanged += (sender, e) =>
                 _logger.LogInformation("Redis configuration changed.");
-
             _cacheDatabase = _redisConnection.GetDatabase();
             _logger.LogInformation("Successfully connected to Redis: {ConnectionString}", redisConnectionString);
         }
         catch (Exception ex)
         {
             _logger.LogCritical(ex, "Could not connect to Redis using connection string: {ConnectionString}", redisConnectionString);
-            throw; // Re-throw to prevent the application from starting without a critical dependency
+            throw;
         }
     }
 
@@ -158,5 +151,28 @@ public class RedisCacheService : ICache
             _redisConnection.Dispose();
             _logger.LogInformation("Redis ConnectionMultiplexer disposed.");
         }
+    }
+
+
+    public async Task PushToListAsync<T>(string key, T item)
+    {
+        var serialized = JsonSerializer.Serialize(item);
+        await _cacheDatabase.ListRightPushAsync(key, serialized);
+    }
+
+    public async Task<List<T>> GetListAsync<T>(string key)
+    {
+        var length = await _cacheDatabase.ListLengthAsync(key);
+        var serializedItems = await _cacheDatabase.ListRangeAsync(key, 0, -1);
+        var result = new List<T>();
+
+        foreach (var serialized in serializedItems)
+        {
+            var item = JsonSerializer.Deserialize<T>(serialized);
+            if (item == null) continue;
+            result.Add(item);
+        }
+
+        return result;
     }
 }

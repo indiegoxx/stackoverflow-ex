@@ -16,41 +16,50 @@ namespace api.Controller
         [HttpGet("similar")]
         public async Task<ActionResult<StackExchangeResponse>> GetSimilarQuestions([FromQuery] string title)
         {
-            try
+            if (string.IsNullOrWhiteSpace(title))
             {
-                if (string.IsNullOrWhiteSpace(title))
-                {
-                    return BadRequest("Title query parameter is required.");
-                }
+                return BadRequest("Title query parameter is required.");
+            }
 
-                var result = await _questionService.GetSimilarQuestionsAsync(title);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (not implemented here)
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+            var result = await _questionService.GetSimilarQuestionsAsync(title);
+            return Ok(result);
         }
 
         [HttpGet("ranked")]
         public async Task<ActionResult<StackExchangeResponse>> GetRankedQuestions([FromQuery] string title)
         {
-            try
+            if (string.IsNullOrWhiteSpace(title))
             {
-                if (string.IsNullOrWhiteSpace(title))
-                {
-                    return BadRequest("Title query parameter is required.");
-                }
+                return BadRequest("Title query parameter is required.");
+            }
+            var result = await _questionService.GetSimilarQuestionsRankedAsync(title);
+            return Ok(result);
+        }
 
-                var result = await _questionService.GetSimilarQuestionsRankedAsync(title);
-                return Ok(result);
-            }
-            catch (Exception ex)
+        [HttpGet("recent")]
+        public async Task<ActionResult<List<RecentQuestion>>> GetRecentQuestions()
+        {
+            var result = await _questionService.GetCachedQuestionsAsync();
+            if (result == null || result.Count == 0)
             {
-                // Log the exception (not implemented here)
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                return NotFound("No recent questions found.");
             }
+            return Ok(result);
+        }
+
+        [HttpGet("suggested-answer")]
+        public async Task<ActionResult<string>> GetSuggestedAnswer([FromQuery] string question)
+        {
+            if (string.IsNullOrWhiteSpace(question))
+            {
+                return BadRequest("Question query parameter is required.");
+            }
+            var result = await _questionService.GetLlmSuggestedAnswer(question);
+            if (result == null)
+            {
+                return NotFound("No suggested answer found.");
+            }
+            return Ok(new { answer = result });
         }
     }
 }

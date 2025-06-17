@@ -11,7 +11,7 @@ do
 done
 
 # Now pull the model
-ollama pull qwen2:0.5B
+ollama pull phi3:3.8b
 
 # Keep server up
 wait

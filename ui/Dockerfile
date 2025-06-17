@@ -1,31 +1,30 @@
-# Build stage
-FROM node:18-alpine as build
+# 1️⃣ Build stage
+FROM node:20.11.1-slim AS builder
 
+# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
 # Install dependencies
-RUN npm install
+COPY package*.json ./
+RUN npm ci
 
-# Copy project files
+# Build application
 COPY . .
-
-# Build the project
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
+# 2️⃣ Serve with Nginx
+FROM nginx:alpine AS production
 
-# Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Remove default nginx config
+RUN rm -rf /etc/nginx/conf.d/* 
 
-# Copy nginx config if you have custom configuration
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Provide custom config if needed
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
+# Copy build output to nginx directory
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expose port
 EXPOSE 80
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx","-g","daemon off;"]

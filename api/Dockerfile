@@ -9,6 +9,8 @@ RUN dotnet publish "api.csproj" -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 80
-EXPOSE 443
+
+ENV ASPNETCORE_URLS=http://+:8000
+
+EXPOSE 8000
 ENTRYPOINT ["dotnet", "api.dll"]
