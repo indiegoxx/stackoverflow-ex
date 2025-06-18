@@ -1,20 +1,21 @@
+interface Question {
+  title: string;
+  timestamp: string;
+}
 
 import { useEffect, useState } from "react";
 
 function useRecentQuestions() {
-  // Define state with string-typed properties
-  const [questions, setQuestions] = useState(
-    [] as { title: string; timestamp: string }[]
-  );
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null as string | null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchQuestions() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:5196/api/Question/recent", {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/Question/recent`, {
           headers: { Accept: "text/plain" },
         });
 
@@ -22,10 +23,9 @@ function useRecentQuestions() {
           throw new Error(`Failed with status ${response.status}`);
         }
 
-        // The API might respond with application/json
-        const data = (await response.json()) as { title: string; timestamp: string }[];
+        const data = await response.json() as Question[];
 
-        // We’re forcing everything to be string-typed
+        // We're forcing everything to be string-typed
         const parsed = data.map((item) => ({
           title: String(item.title),
           timestamp: String(item.timestamp),

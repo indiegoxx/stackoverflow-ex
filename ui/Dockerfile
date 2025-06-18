@@ -1,5 +1,4 @@
-# 1. Build stage
-FROM node:alpine AS builder
+FROM node:alpine
 
 WORKDIR /app
 
@@ -7,23 +6,15 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Install serve package globally
+RUN npm install -g serve
+
 # Now copy rest of the files and build
 COPY . .
 RUN npm run build
 
-# 2. Serve with Nginx
-FROM nginx:alpine
+# Expose port 3000 (serve's default port)
+EXPOSE 3000
 
-# Remove the default config
-RUN rm -f /etc/nginx/conf.d/default.conf
-
-# Provide custom config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built files from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
-
-CMD ["nginx","-g","daemon off;"]
+# Use serve to host the static files
+CMD ["serve", "-s", "dist"]

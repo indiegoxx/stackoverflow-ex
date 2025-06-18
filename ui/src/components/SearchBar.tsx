@@ -4,10 +4,15 @@ import { Search, Keyboard } from 'lucide-react';
 interface SearchBarProps {
   onSearch: (query: string) => void;
   isLoading?: boolean;
+  query?: string; // Make query optional
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading = false }) => {
-  const [query, setQuery] = useState('');
+const SearchBar: React.FC<SearchBarProps> = ({ 
+  onSearch, 
+  isLoading = false, 
+  query: initialQuery = '' // Add default value
+}) => {
+  const [query, setQuery] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

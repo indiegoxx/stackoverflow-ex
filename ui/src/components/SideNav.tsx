@@ -1,4 +1,4 @@
-import React, { useState, ButtonHTMLAttributes } from 'react';
+import React, { useState } from 'react';
 import { Search, Clock, TrendingUp, HelpCircle, Menu, X } from 'lucide-react';
 import { NavItem } from '../types';
 
@@ -13,8 +13,6 @@ const SideNav: React.FC<SideNavProps> = ({ activeItem, onItemClick }) => {
   const navItems = [
     { id: 'search' as NavItem, label: 'Search Questions', icon: Search },
     { id: 'recent' as NavItem, label: 'Recent Questions', icon: Clock },
-    { id: 'popular' as NavItem, label: 'Popular Today', icon: TrendingUp },
-    { id: 'unanswered' as NavItem, label: 'Unanswered', icon: HelpCircle },
   ];
 
   const NavContent = () => (

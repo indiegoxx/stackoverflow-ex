@@ -4,6 +4,7 @@ import SideNav from './components/SideNav';
 import SearchResults from './components/SearchResults';
 import { useSearch } from './hooks/useSearch';
 import { NavItem } from './types';
+import Recent from './components/Recent';
 
 const App: React.FC = () => {
   const [activeNavItem, setActiveNavItem] = useState<NavItem>('search');
@@ -24,9 +25,20 @@ const App: React.FC = () => {
   };
 
   const renderContent = () => {
+
+    if (activeNavItem === 'recent') {
+      return <Recent onQuestionSelect={
+        (question) => {
+          setCurrentQuery(question.title);
+          search(question.title);
+          setActiveNavItem('search');
+        }
+      }/>;
+    }
+
     if (error) {
       return (
-        <div className="flex-1 flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex-1 flex items-center justify-center </div>min-h-screen bg-gray-50">
           <div className="text-center">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Search Error</h2>
@@ -63,7 +75,6 @@ const App: React.FC = () => {
           <div className="text-6xl mb-4">🚧</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Coming Soon</h2>
           <p className="text-gray-600">
-            {activeNavItem === 'recent' && 'Recent questions feature is under development'}
             {activeNavItem === 'popular' && 'Popular questions feature is under development'}
             {activeNavItem === 'unanswered' && 'Unanswered questions feature is under development'}
           </p>
