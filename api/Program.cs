@@ -10,7 +10,10 @@ builder.Services.AddControllers(); // Add this line
 
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddSingleton<ICache, RedisCacheService>();
-builder.Services.AddSingleton<ILlmService, LlmService>();
+builder.Services.AddSingleton<ILlmBLService, LlmBLService>();
+builder.Services.AddScoped<ILlmService, LlmService>();
+builder.Services.AddSingleton<ICacheLoggerService, CacheLoggerService>();
+
 builder.Services.AddHttpClient();
 // Add this after other builder.Services configurations
 builder.Services.AddCors(options =>

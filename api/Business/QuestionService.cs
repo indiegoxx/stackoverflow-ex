@@ -14,13 +14,13 @@ namespace Business
     {
         private readonly ICache _cache;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILlmService _llmService;
+        private readonly ILlmBLService _llmBlService;
 
-        public QuestionService(ICache cache, IHttpClientFactory httpClientFactory, ILlmService llmService)
+        public QuestionService(ICache cache, IHttpClientFactory httpClientFactory, ILlmBLService llmBlService)
         {
             _cache = cache;
             _httpClientFactory = httpClientFactory;
-            _llmService = llmService;
+            _llmBlService = llmBlService;
         }
 
         public async Task<List<RecentQuestion>> GetCachedQuestionsAsync()
@@ -30,7 +30,7 @@ namespace Business
 
         public async Task<string?> GetLlmSuggestedAnswer(string question)
         {
-            return await _llmService.LLMSuggestedAnswer(question);
+            return await _llmBlService.LLMSuggestedAnswer(question);
         }
 
 
@@ -90,7 +90,7 @@ namespace Business
                 return new StackExchangeResponse();
             }
 
-            var reRankedQuestions = await _llmService.RerankItemsWithLLMAsync(
+            var reRankedQuestions = await _llmBlService.RerankItemsWithLLMAsync(
                 questionsToRerank,
                 title
                 );
