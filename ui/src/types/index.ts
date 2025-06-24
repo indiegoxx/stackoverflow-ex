@@ -12,6 +12,7 @@ export interface SearchResult {
     display_name: string;
     reputation: number;
   };
+  relevanceScore: string;
 }
 
 export interface SearchResponse {

@@ -71,6 +71,11 @@ const SearchResultBox: React.FC<SearchResultBoxProps> = ({ item }) => {
                         </span>
                     ))}
                 </div>
+                {item.relevanceScore != null && (
+                    <div className="mb-2 text-xs text-gray-600">
+                        Relevance Score: <span className="font-semibold">{item.relevanceScore}</span>
+                    </div>
+                )}
 
                 {/* Question metadata (user, date) */}
                 <div className="flex justify-end items-center text-xs text-gray-500">

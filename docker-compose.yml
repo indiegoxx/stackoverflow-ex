@@ -18,7 +18,7 @@ services:
       - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - Redis__ConnectionString=redis:6379
       - Ollama__BaseAddress=http://ollama:11434/
-      - MlxApi__BaseAddress=http://localhost:8000/
+      - MlxApi__BaseAddress=http://host.docker.internal:9001/
     depends_on:
       - redis
       - ollama

@@ -31,7 +31,7 @@ public class LlmBLService : ILlmBLService
         llmPromptBuilder.AppendLine("---"); // Separator for clarity
         llmPromptBuilder.AppendLine($"question: {question}");
         string llmPrompt = llmPromptBuilder.ToString();
-        var llmRawResponse = await _llmService.GetLLMResponseOllama(llmPrompt);
+        var llmRawResponse = await _llmService.GetLLMResponseMlx(llmPrompt,100);
         return llmRawResponse;
     }
     public async Task<List<StackOverflowQuestion>?> RerankItemsWithLLMAsync(
@@ -66,6 +66,19 @@ public class LlmBLService : ILlmBLService
                 .OrderByDescending(item => scoresDictionary[item.question_id])
                 .ToList();
 
+            // Set the relevanceScore property for each item
+            foreach (var item in sortedItems)
+            {
+                if (scoresDictionary.TryGetValue(item.question_id, out var score))
+                {
+                    item.relevanceScore = score.ToString();
+                }
+                else
+                {
+                    item.relevanceScore = "0";
+                }
+            }
+
             return sortedItems;
         }
         catch (Exception ex)
@@ -88,8 +101,8 @@ public class LlmBLService : ILlmBLService
 
             StringBuilder promptBuilder = new StringBuilder();
             promptBuilder.AppendLine("You are an expert at measuring question similarity and relevance.");
-            promptBuilder.AppendLine($"Base Question: {baseQuestion}");
-            promptBuilder.AppendLine($"Compare Question: {questionSnippet.Replace("\n", " ").Replace("\r", "")}");
+            promptBuilder.AppendLine($"Base Question='{baseQuestion}'");
+            promptBuilder.AppendLine($"Compare Question='{questionSnippet.Replace("\n", " ").Replace("\r", "")}'");
             promptBuilder.AppendLine();
             promptBuilder.AppendLine("Rate the similarity and relevance of the 'Compare Question' to the 'Base Question' on a scale of 0-100:");
             promptBuilder.AppendLine("- 0-20: Completely unrelated");
@@ -104,7 +117,7 @@ public class LlmBLService : ILlmBLService
 
             _logger.LogInfo($"LLM Scoring Prompt for Question ID {question.question_id}: {prompt}");
 
-            var llmResponse = await _llmService.GetLLMResponseOllama(prompt);
+            var llmResponse = await _llmService.GetLLMResponseMlx(prompt, 3);
             string cleanedResponse = llmResponse.Trim();
 
             _logger.LogInfo($"LLM Raw Scoring Response for Question ID {question.question_id}: {cleanedResponse}");
