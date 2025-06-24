@@ -14,8 +14,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - Logging__LogLevel__Default=Information
-      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+      - Logging__LogLevel__Default=Trace
+      - Logging__LogLevel__Microsoft.AspNetCore=Trace
       - Redis__ConnectionString=redis:6379
       - Ollama__BaseAddress=http://ollama:11434/
     depends_on:
